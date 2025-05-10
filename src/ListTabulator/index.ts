@@ -167,7 +167,9 @@ export default class ListTabulator<Renderer extends ListRenderer> {
         (event) => {
           switch (event.key) {
             case 'Enter':
-              this.enterPressed(event);
+              if (!event.shiftKey) {
+                this.enterPressed(event);
+              }
               break;
             case 'Backspace':
               this.backspace(event);
@@ -530,6 +532,13 @@ export default class ListTabulator<Renderer extends ListRenderer> {
      * Then backspace button should remove letter as usual
      */
     if (!isCaretAtStartOfInput(currentItem)) {
+      return;
+    }
+
+    /**
+     * If backspace is pressed with selection, it should be handled as usual
+     */
+    if (window.getSelection()?.isCollapsed === false) {
       return;
     }
 
